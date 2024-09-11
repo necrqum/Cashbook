@@ -5,13 +5,14 @@
 %userprofile%\Desktop\KB\System\Tools\Settings\License
 %userprofile%\Desktop\KB\Daten
 -Download
-https://raw.githubusercontent.com/necrqum/cashbook/main/For Developers/KB_Repair.bat
+https://raw.githubusercontent.com/necrqum/Cashbook/main/requirements.txt
+https://raw.githubusercontent.com/necrqum/Cashbook/main/Intern_Files/KB_Repair.bat
 %userprofile%\Desktop\KB\System\Tools
-https://raw.githubusercontent.com/necrqum/cashbook/main/For Developers/KB_Update.bat
+https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/KB_Update.bat
 %userprofile%\Desktop\KB\System\Tools
-https://raw.githubusercontent.com/necrqum/cashbook/main/For Developers/KB_Converter.bat
+https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/KB_Converter.bat
 %userprofile%\Desktop\KB\System\Tools
-https://raw.githubusercontent.com/necrqum/cashbook/main/For Developers/version.txt
+https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/version.txt
 %userprofile%\Desktop\KB\System\Files\Temp
-https://raw.githubusercontent.com/necrqum/cashbook/main/For Developers/license.txt
+https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/license.txt
 %userprofile%\Desktop\KB\System\Tools\Settings\License
