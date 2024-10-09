@@ -1,13 +1,22 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Abhängigkeiten nur aufrufen, wenn der Parameter help übergeben wurde
+if "%~1"=="-h" (
+    echo help
+    pause
+) else if "%~1"=="--help" (
+    echo help
+    pause
+)
+
 :: Abhängigkeiten
 call :abhängigkeiten
 
 :: setup
+call :process_requirements
+call :counter
 title Kassenbuch [V%version%].bat
-call :log_function ":process_requirements" 1
-call :log_function ":counter" 1
 
 if "%info%" == "1" (
     cls
@@ -49,7 +58,7 @@ goto :main_menu
     )
     set /p version=<"%Storage%\CB\System\Files\Temp\version.txt"
 
-    :: Farbcodes für Textausgabe
+    :: Farbcodes für Textausgabem
     set "color_reset=[0m"
     set "color_info=[32m"
     set "color_warning=[33m"
@@ -60,6 +69,7 @@ goto :main_menu
     set "color_error_highlight=[41;37m"
     set "color_status_highlight=[46;37m"
     goto :eof
+    :: oder exit /b
 
 :: Funktion zum Verarbeiten der requirements.txt
 :process_requirements
@@ -68,8 +78,11 @@ goto :main_menu
     :: Überprüfen, ob die Datei existiert
     if not exist "%file%" (
         echo %color_error%[ERROR] Die Datei "%file%" wurde nicht gefunden!%color_reset%
+        echo %color_status%[STATUS] Baue die Umgebung '%TEMP%\CB'.%color_reset%
         mkdir "%TEMP%\CB"
-        echo %~p0>"%TEMP%\CB\path.txt"
+        echo %~dp0>"%TEMP%\CB\path.txt"
+        echo %Storage%>>"%TEMP%\CB\path.txt"
+        echo %color_info%[INFO] Der Bau der Umgebung '%TEMP%\CB' wurde erfolgreich abgeschlossen.%color_reset%
         echo %color_status%[STATUS] Lade requirements.txt herunter.%color_reset%
         curl -o "%TEMP%\CB\requirements.txt" https://raw.githubusercontent.com/necrqum/Cashbook/main/requirements.txt
         if errorlevel 1 (
@@ -162,6 +175,17 @@ goto :main_menu
             )
         )
     )
+    echo %color_status%[STATUS] Schreibe die Datei 'colors.bat'.%color_reset%
+    set "color_reset=[0m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_info=[32m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_warning=[33m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_error=[31m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_status=[36m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_info_highlight=[42;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_warning_highlight=[43;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_error_highlight=[41;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    set "color_status_highlight=[46;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo %color_info%[INFO] Die Datei '%Storage%\CB\System\Tools\Temp\colors.bat' wurde erfolgreich geschrieben.%color_reset%
     echo %color_info%[INFO] Alle Schritte erfolgreich abgeschlossen!%color_reset%
     goto :eof
 
@@ -173,8 +197,8 @@ goto :main_menu
         if !count! GEQ 5 (
             REM xcopy /s /i "%userprofile%\Desktop\Kassenbuch" "F:\Backup\Kassenbuch_%DATE%"
             echo 0 >"%Storage%\CB\System\Files\Temp\counted.txt"
-            start "%Storage%\CB\System\Tools\CB_Update.bat"
-            exit /b 0
+            cd %Storage%\CB\System\Tools\ && start CB_Update.bat
+            exit
         ) else (
             set /a n_count=!count! + 1
             echo !n_count! >"%Storage%\CB\System\Files\Temp\counted.txt"
@@ -215,7 +239,6 @@ goto :main_menu
 
 :: Erstellen von Logfiles 
 :log_function
-    setlocal enabledelayedexpansion
     set "logfile=%Storage%\CB\System\Files\Temp\Logs\output.log"
     
     :: Parameter 1: Funktionsname oder Befehl, Parameter 2: Optional, ob nur Fehler protokolliert werden sollen (1 = nur Fehler, 0 = alle Ausgaben)
@@ -226,21 +249,21 @@ goto :main_menu
         echo -------------------------------------------------------
         echo [%date% %time%] Start der Funktion: !function_name!
         echo -------------------------------------------------------
-        
+
         :: Dynamische Ausführung des Befehls oder der Funktion
         if "!only_errors!" == "1" (
-            call !function_name! 2>>"%logfile%" >>nul
+            cmd /c "call !function_name! >>"%logfile%" 2>&1"
             if errorlevel 1 (
                 echo [%date% %time%] Fehler bei der Funktion: !function_name! >> "%logfile%"
             )
         ) else (
-            call !function_name! >> "%logfile%" 2>&1
+            cmd /c "call !function_name! >>"%logfile%" 2>&1"
         )
 
         echo -------------------------------------------------------
         echo [%date% %time%] Ende der Funktion: !function_name!
         echo -------------------------------------------------------
     ) >> "%logfile%" 2>&1
-    
+
     endlocal
     exit /b 0

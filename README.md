@@ -19,19 +19,24 @@
 ## News:
 ![GitHub last commit](https://img.shields.io/github/last-commit/necrqum/Cashbook)
 
+## Todos
+- [x] 
+- [x] 
+- [x] 
+
 ## Overview:
 CB [Cashbook] is a tool *100%* written in [batch](https://en.wikipedia.org/wiki/Batch_file).
 
 This application provides a simple way to track all cash transactions of a business or individual. It serves as both a journal and a ledger, capturing all cash inflows and outflows, including cash receipts (money coming in) and cash payments (money going out). Therefore it saves
 
 ## Contents:
-- 1. [Resources](#resources)
-- 2. [Use](#use)
-- 3. [How it works](#how-it-works)
-- 4. [Requirements](#requirements)
-- 5. [Installation](#installation)
-- 6. [Versions](#versions)
-- 7. [Disclaimer](#disclaimer)
+1. [Resources](#resources)
+2. [Use](#use)
+3. [How it works](#how-it-works)
+4. [Requirements](#requirements)
+5. [Installation](#installation)
+6. [Versions](#versions)
+7. [Disclaimer](#disclaimer)
 
 ## Resources:
 - [YouTube Video](https://www.youtube.com/watch?v=JE5hsklKggM)

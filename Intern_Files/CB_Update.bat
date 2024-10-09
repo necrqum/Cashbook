@@ -1,15 +1,67 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Den Pfad aus der Datei lesen
-set /p path=<"%TEMP%\CB\path.txt"
+:: Farbcodes für Textausgaben
+set "color_reset=[0m"
+set "color_info=[32m"
+set "color_warning=[33m"
+set "color_error=[31m"
+set "color_status=[36m"
+set "color_info_highlight=[42;37m"
+set "color_warning_highlight=[43;37m"
+set "color_error_highlight=[41;37m"
+set "color_status_highlight=[46;37m"
 
-:: Die Abhängigkeiten aufrufen
-call "%path%\CB.bat" :abhängigkeiten
+:: Variablen definieren
+set "file=%TEMP%\CB\path.txt"
+
+:: Überprüfe, ob die Datei existiert
+if not exist "%file%" (
+    call :handle_error "Datei '%file%' nicht gefunden"
+    exit /b 1
+)
+
+set "count=0"
+
+:: Datei Zeile für Zeile lesen
+for /f "tokens=*" %%i in ('type "%file%"') do (
+    set /a count+=1
+    if !count! equ 1 set "cb_path=%%i"
+    if !count! equ 2 set "Storage=%%i"
+    if !count! gtr 2 goto :break_loop
+)
+:break_loop
+
+:: Sicherstellen, dass die Pfade gesetzt wurden
+if not defined cb_path (
+    call :handle_error "cb_path konnte nicht aus der Datei gelesen werden"
+    exit /b 1
+)
+
+if not defined Storage (
+    call :handle_error "Storage konnte nicht aus der Datei gelesen werden"
+    exit /b 1
+)
+
+:: Version aus Datei lesen
+set /p version=<"%Storage%\CB\Files\Temp\version.txt"
+if errorlevel 1 (
+    call :handle_error "Fehler beim Lesen der Version"
+    exit /b 1
+)
 
 :: Die Version herunterladen & lesen
-curl -o "%Storage%\CB\System\Tools\Temp\version.txt" "https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/version.txt"
+curl -o "%Storage%\CB\System\Tools\Temp\version.txt" "https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/version.txt" -v -i
+if errorlevel 1 (
+    call :handle_error "Fehler beim Herunterladen der neuen Version"
+    exit /b 1
+)
+
 set /p t_version=<"%Storage%\CB\System\Tools\Temp\version.txt"
+if errorlevel 1 (
+    call :handle_error "Fehler beim Lesen der heruntergeladenen Version"
+    exit /b 1
+)
 
 :: Überprüfen, ob ein Update verfügbar ist
 if "%version%"=="%t_version%" (
@@ -35,7 +87,7 @@ if "%version%"=="%t_version%" (
 
 :update
 :: Vorhandene Datei löschen, bevor die neue heruntergeladen wird
-del "%path%\CB.bat"
+del "%cb_path%\CB.bat"
 call :handle_error "Datei löschen"
 
 :: Datei verschieben
@@ -43,7 +95,7 @@ move /y "%Storage%\CB\System\Tools\Temp\version.txt" "%Storage%\CB\System\Files\
 call :handle_error "Datei verschieben"
 
 :: Die neue CB.bat herunterladen
-curl -o "%path%\CB.bat" "https://raw.githubusercontent.com/necrqum/cashbook/main/CB.bat"
+curl -o "%cb_path%\CB.bat" "https://raw.githubusercontent.com/necrqum/cashbook/main/CB.bat"
 call :handle_error "Datei herunterladen"
 
 :: Erfolgsmeldung
@@ -52,7 +104,7 @@ echo %color_info%[INFO] Alle Schritte erfolgreich abgeschlossen!%color_reset%
 timeout /t 2 /nobreak
 
 :: CB.bat starten
-start "" "%path%\CB.bat"
+cd %cb_path% && start CB.bat
 timeout /t 3
 exit /b 0
 
