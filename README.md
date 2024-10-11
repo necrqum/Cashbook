@@ -98,8 +98,12 @@ Comming soon...
 
 ## Versions
 **Releases:**
-- [Version 1.0.0](https://github.com/necrqum/Cashbook/releases/tag/v1.0.0)
-- [Version 1.1.0](https://github.com/necrqum/Cashbook/releases/tag/v1.1.0)
-**Developer Versions:**
+| *Full Versions* | *Developer Versions* |
+| ------- | ------- |
+| [1.0.0](https://github.com/necrqum/Cashbook/releases/tag/v1.0.0) | [1.0.0](https://github.com/necrqum/Cashbook/releases/tag/d1.0.0) |
+| [1.1.0](https://github.com/necrqum/Cashbook/releases/tag/v1.1.0) | [1.1.0](https://github.com/necrqum/Cashbook/releases/tag/d1.1.0) |
+| [1.2.0](https://github.com/necrqum/Cashbook/releases/tag/v1.2.0) | [1.2.0](https://github.com/necrqum/Cashbook/releases/tag/d1.2.0) |
+
+- [Developer 1.0.0](https://github.com/necrqum/Cashbook/releases/tag/d1.0.0)
 ## Disclaimer:
 License...
