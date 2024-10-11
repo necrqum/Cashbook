@@ -21,10 +21,10 @@
 
 ## Todos
 - [x] fix the updater
-- [x] implement entry-functions
-- [x] implement settings
-- [x] add logs
-- [x] add advanced error-handling
+- [] implement entry-functions
+- [] implement settings
+- [] add logs
+- [] add advanced error-handling
 
 ## Overview:
 CB [Cashbook] is a tool *100%* written in [batch](https://en.wikipedia.org/wiki/Batch_file).

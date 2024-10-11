@@ -12,18 +12,18 @@ if "%~1"=="-h" (
 
 :: Abhängigkeiten
 call :abhängigkeiten
+title Kassenbuch [V%version%].bat
 
 :: setup
 call :process_requirements
 call :counter
-title Kassenbuch [V%version%].bat
 
 if "%info%" == "1" (
     cls
     echo Welcome %username%!
     echo.
     echo Please consider to read our guidelines.
-    start https://github.com/necrqum/Cashbook/README.md
+    start https://github.com/necrqum/Cashbook/blob/main/README.md
     timeout /t 15
 )
 
@@ -54,7 +54,7 @@ goto :main_menu
     if exist "settings.txt" (
         set /p Storage=<settings.txt
     ) else (
-        set Storage="%userprofile%\Desktop"
+        set "Storage=%userprofile%\Desktop"
     )
     set /p version=<"%Storage%\CB\System\Files\Temp\version.txt"
 
@@ -195,10 +195,9 @@ goto :main_menu
         set /p count=<"%Storage%\CB\System\Files\Temp\counted.txt"
         echo !count!
         if !count! GEQ 5 (
-            REM xcopy /s /i "%userprofile%\Desktop\Kassenbuch" "F:\Backup\Kassenbuch_%DATE%"
             echo 0 >"%Storage%\CB\System\Files\Temp\counted.txt"
-            cd %Storage%\CB\System\Tools\ && start CB_Update.bat
-            exit
+            REM xcopy /s /i "%userprofile%\Desktop\Kassenbuch" "F:\Backup\Kassenbuch_%DATE%"
+            goto :handle_update
         ) else (
             set /a n_count=!count! + 1
             echo !n_count! >"%Storage%\CB\System\Files\Temp\counted.txt"
@@ -208,6 +207,27 @@ goto :main_menu
         set Info=1
     )
     goto :eof
+
+: Update Behandlung
+:handle_update
+cd /d "%Storage%\CB\System\Tools\" && start CB_Update.bat
+:: call :handle_error "Programm starten"
+timeout /t 3 /nobreak
+:A
+if exist "%TEMP%\CB\shutdown.flag" (
+    if exist "%TEMP%\CB\shutdown2.flag" (
+        del "%TEMP%\CB\shutdown.flag"
+        del "%TEMP%\CB\shutdown2.flag"
+        goto :main_menu
+    )
+    cls
+    echo %color_status%[STATUS] Es wird nach Updates gesucht...%color_reset%
+    echo %color_warning%[WARNING] Bitte beenden Sie nicht das Programm.%color_reset%
+    timeout /t 3 /nobreak > nul
+    goto :A
+) else (
+    exit
+)
 
 :: Allgemeine Fehlerbehandlungsfunktion
 :handle_error
