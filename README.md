@@ -21,10 +21,10 @@
 
 ## Todos
 - [x] fix the updater
-- [] implement entry-functions
-- [] implement settings
-- [] add logs
-- [] add advanced error-handling
+- [ ] implement entry-functions
+- [ ] implement settings
+- [ ] add logs
+- [ ] add advanced error-handling
 
 ## Overview:
 CB [Cashbook] is a tool *100%* written in [batch](https://en.wikipedia.org/wiki/Batch_file).
@@ -61,29 +61,29 @@ Comming soon...
 **Standart Installation:**
 - Installation via [git](https://git-scm.com/)
 - git [download](https://git-scm.com/downloads)
-    1. Clone the repository: 
+1. Clone the repository: 
     ```bash
     git clone https://github.com/necrqum/Cashbook.git
     ```
-    2. Navigate into the directory:
+2. Navigate into the directory:
     ```bash
     cd Cashbook
     ```
-    3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
+3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
     ```bash
     pip install -r requirements.txt
     ```
-    4. Run the program:
+4. Run the program:
     ```bash
     cb.bat
     ```
 - Installation via [curl](https://curl.se/)
 - pre-installed on Windows
-    1. Download the repository:
+1. Download the repository:
     ```bash
     curl -L -O https://github.com/necrqum/Cashbook/archive/main.zip
     ```
-    2. Extract the `main.zip`
+2. Extract the `main.zip`
     - using the Windows default extractor (Win 11)
     - using an external program:
         Recommendation:
@@ -92,9 +92,9 @@ Comming soon...
 
 **Quick Installation:**
 - Installation via an external installer
-    1. Download an [installer](https://github.com/necrqum/Cashbook/tree/main/Installer).
-    2. Run the installer of your choice.
-    3. Follow the on-screen instructions.
+1. [Download the installer](https://github.com/necrqum/Cashbook/tree/main/Installer).
+2. Run the installer of your choice.
+3. Follow the on-screen instructions.
 
 ## Versions
 **Releases:**
