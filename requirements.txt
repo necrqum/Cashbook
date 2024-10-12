@@ -12,6 +12,8 @@ https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/CB_Update.b
 \CB\System\Tools
 https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/CB_Converter.bat
 \CB\System\Tools
+https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/CB_CreateExcel.ps1
+\CB\System\Tools
 https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/version.txt
 \CB\System\Files\Temp
 https://raw.githubusercontent.com/necrqum/cashbook/main/Intern_Files/license.txt
