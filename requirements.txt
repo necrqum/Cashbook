@@ -1,5 +1,4 @@
 -Umgebung-
-\CB
 \CB\System\Tools
 \CB\System\Tools\Temp
 \CB\System\Files\Temp\Logs
