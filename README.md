@@ -97,8 +97,8 @@ Comming soon...
 3. Follow the on-screen instructions.
 
 ## Versions
-**Releases:**
-| *Full Versions* | *Developer Versions* |
+*Releases:*
+| Full Versions | Developer Versions |
 | ------- | ------- |
 | [1.0.0](https://github.com/necrqum/Cashbook/releases/tag/v1.0.0) | [1.0.0](https://github.com/necrqum/Cashbook/releases/tag/d1.0.0) |
 | [1.1.0](https://github.com/necrqum/Cashbook/releases/tag/v1.1.0) | [1.1.0](https://github.com/necrqum/Cashbook/releases/tag/d1.1.0) |
