@@ -21,6 +21,7 @@
 
 ## Todos
 - [x] fix the updater
+- [ ] implement tool-updates
 - [ ] implement entry-functions
 - [ ] implement settings
 - [ ] add logs
@@ -59,24 +60,29 @@ Comming soon...
 
 ## Installation
 **Standart Installation:**
-- Installation via [git](https://git-scm.com/)
-- git [download](https://git-scm.com/downloads)
-1. Clone the repository: 
-    ```bash
-    git clone https://github.com/necrqum/Cashbook.git
-    ```
-2. Navigate into the directory:
-    ```bash
-    cd Cashbook
-    ```
-3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
-    ```bash
-    pip install -r requirements.txt
-    ```
-4. Run the program:
-    ```bash
-    cb.bat
-    ```
+- <details>
+    <summary>Installation via [git](https://git-scm.com/)</summary>
+
+    - git [download](https://git-scm.com/downloads)
+    1. Clone the repository: 
+        ```bash
+        git clone https://github.com/necrqum/Cashbook.git
+        ```
+    2. Navigate into the directory:
+        ```bash
+        cd Cashbook
+        ```
+    3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
+        ```bash
+        CB_Install.bat
+        ```
+    4. Run the program:
+        ```bash
+        cb.bat
+        ```
+
+</details>
+
 - Installation via [curl](https://curl.se/)
 - pre-installed on Windows
 1. Download the repository:
@@ -106,7 +112,8 @@ Comming soon...
 
 ## Disclaimer:
 [Our license](https://github.com/necrqum/Cashbook/tree/main/Intern_Files/license.txt)
+
 *Summary*
-1. 
-2. 
-3. 
+1. rights
+2. liberty
+3. freedom
