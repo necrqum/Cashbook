@@ -60,26 +60,26 @@ Comming soon...
 
 ## Installation
 **Standart Installation:**
-- <details>
+<details>
     <summary>Installation via [git](https://git-scm.com/)</summary>
 
-    - git [download](https://git-scm.com/downloads)
-    1. Clone the repository: 
-        ```bash
-        git clone https://github.com/necrqum/Cashbook.git
-        ```
-    2. Navigate into the directory:
-        ```bash
-        cd Cashbook
-        ```
-    3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
-        ```bash
-        CB_Install.bat
-        ```
-    4. Run the program:
-        ```bash
-        cb.bat
-        ```
+*git [download](https://git-scm.com/downloads)*
+1. Clone the repository: 
+    ```bash
+    git clone https://github.com/necrqum/Cashbook.git
+    ```
+2. Navigate into the directory:
+    ```bash
+    cd Cashbook
+    ```
+3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
+    ```bash
+    CB_Install.bat
+    ```
+4. Run the program:
+    ```bash
+    cb.bat
+    ```
 
 </details>
 
