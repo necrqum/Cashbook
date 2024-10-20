@@ -61,7 +61,7 @@ Comming soon...
 ## Installation
 **Standart Installation:**
 <details>
-    <summary>Installation via <a href="https://git-scm.com/">Git</a></summary>
+    <summary>*Installation via <a href="https://git-scm.com/">Git*</a></summary>
 
     - git [Download](https://git-scm.com/downloads)
 1. Clone the repository: 
@@ -84,7 +84,7 @@ Comming soon...
 </details>
 
 <details>
-    <summary>Installation via <a href="https://curl.se/">Curl</a></summary>
+    <summary>*Installation via <a href="https://curl.se/">Curl*</a></summary>
 
     - comes pre-installed on Windows
 1. Download the repository:
@@ -111,9 +111,9 @@ Comming soon...
 
 **Quick Installation:**
 <details>
-    <summary>Installation via an external installer</a></summary>
+    <summary>*Installation via an external installer*</a></summary>
 
-1. [Download the installer of your choice](https://github.com/necrqum/Cashbook/tree/main/Installer).
+1. Download the [installer](https://github.com/necrqum/Cashbook/tree/main/Installer) of your choice.
 2. Run the installer.
 3. Follow the on-screen instructions.
 
