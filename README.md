@@ -61,9 +61,8 @@ Comming soon...
 ## Installation
 **Standart Installation:**
 <details>
-    <summary>Installation via [git](https://git-scm.com/)</summary>
-
-*git [download](https://git-scm.com/downloads)*
+    <summary>Installation via <a href="https://git-scm.com/">git</a></summary>
+    - [Download](https://git-scm.com/downloads) git
 1. Clone the repository: 
     ```bash
     git clone https://github.com/necrqum/Cashbook.git
@@ -80,7 +79,6 @@ Comming soon...
     ```bash
     cb.bat
     ```
-
 </details>
 
 - Installation via [curl](https://curl.se/)
