@@ -62,6 +62,7 @@ Comming soon...
 **Standart Installation:**
 <details>
     <summary>Installation via <a href="https://git-scm.com/">git</a></summary>
+
     - [Download](https://git-scm.com/downloads) git
 1. Clone the repository: 
     ```bash
@@ -79,6 +80,7 @@ Comming soon...
     ```bash
     cb.bat
     ```
+    
 </details>
 
 - Installation via [curl](https://curl.se/)
