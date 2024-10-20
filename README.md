@@ -30,7 +30,7 @@
 ## Overview:
 CB [Cashbook] is a tool *100%* written in [batch](https://en.wikipedia.org/wiki/Batch_file).
 
-This application provides a simple way to track all cash transactions of a business or individual. It serves as both a journal and a ledger, capturing all cash inflows and outflows, including cash receipts (money coming in) and cash payments (money going out). Therefore it saves
+> This application provides a simple way to track all cash transactions of a business or individual. > It serves as both a journal and a ledger, capturing all cash inflows and outflows, including cash > receipts (money coming in) and cash payments (money going out). Therefore it saves
 
 ## Contents:
 1. [Resources](#resources)
@@ -61,9 +61,9 @@ Comming soon...
 ## Installation
 **Standart Installation:**
 <details>
-    <summary>Installation via <a href="https://git-scm.com/">git</a></summary>
+    <summary>Installation via <a href="https://git-scm.com/">Git</a></summary>
 
-    - [Download](https://git-scm.com/downloads) git
+    - git [Download](https://git-scm.com/downloads)
 1. Clone the repository: 
     ```bash
     git clone https://github.com/necrqum/Cashbook.git
@@ -80,11 +80,13 @@ Comming soon...
     ```bash
     cb.bat
     ```
-    
+
 </details>
 
-- Installation via [curl](https://curl.se/)
-- pre-installed on Windows
+<details>
+    <summary>Installation via <a href="https://curl.se/">Curl</a></summary>
+
+    - comes pre-installed on Windows
 1. Download the repository:
     ```bash
     curl -L -O https://github.com/necrqum/Cashbook/archive/main.zip
@@ -93,14 +95,29 @@ Comming soon...
     - using the Windows default extractor (Win 11)
     - using an external program:
         Recommendation:
-            - [7-Zip](https://www.7-zip.org/)
-            - [WinRAR](https://www.win-rar.com/start.html?&L=1)
+    - [7-Zip](https://www.7-zip.org/)
+    - [WinRAR](https://www.win-rar.com/start.html?&L=1)
+
+3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
+    ```bash
+    CB_Install.bat
+    ```
+4. Run the program:
+    ```bash
+    cb.bat
+    ```
+
+</details>
 
 **Quick Installation:**
-- Installation via an external installer
-1. [Download the installer](https://github.com/necrqum/Cashbook/tree/main/Installer).
-2. Run the installer of your choice.
+<details>
+    <summary>Installation via an external installer</a></summary>
+
+1. [Download the installer of your choice](https://github.com/necrqum/Cashbook/tree/main/Installer).
+2. Run the installer.
 3. Follow the on-screen instructions.
+
+</details>
 
 ## Versions
 *Releases:*
