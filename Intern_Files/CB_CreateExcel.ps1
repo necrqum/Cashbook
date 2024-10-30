@@ -1,43 +1,50 @@
-param (
-    [int]$yearBalance,
-    [int]$monthBalance,
-    [int]$dayBalance,
-    [string]$Workbookpath
+param(
+    [string]$operation,
+    [string]$name,
+    [string]$income,
+    [string]$expenditure,
+    [string]$Workbookpath,
+    [string]$cashbalance
 )
 
-$Excel = New-Object -ComObject Excel.Application
-$Excel.Visible = $false
+# Excel-Anwendung öffnen und Datei prüfen
+$excelExists = Test-Path $Workbookpath
+$excel = New-Object -ComObject Excel.Application
+$excel.Visible = $false
+$excel.DisplayAlerts = $false
 
-# Überprüfen, ob die Datei existiert
-if (Test-Path $Workbookpath) {
-    $Workbook = $Excel.Workbooks.Open($Workbookpath)
-    $Sheet = $Workbook.Sheets.Item(1)
+if ($excelExists) {
+    $workbook = $excel.Workbooks.Open($Workbookpath)
 } else {
-    $Workbook = $Excel.Workbooks.Add()
-    $Sheet = $Workbook.Sheets.Item(1)
-    
-    # Initiale Kopfzeilen festlegen, wenn die Datei neu erstellt wird
-    $Sheet.Cells.Item(1,1) = 'Cash Balance'
-    $Sheet.Cells.Item(1,2) = 'Year'
-    $Sheet.Cells.Item(1,3) = 'Month'
-    $Sheet.Cells.Item(1,4) = 'Day'
-    $Sheet.Cells.Item(1,5) = 'Date'
+    # Neues Workbook erstellen und Header festlegen
+    $workbook = $excel.Workbooks.Add()
+    $sheet = $workbook.Sheets.Item(1)
+    $sheet.Name = "Kassenbuch"
+    $sheet.Cells.Item(1, 1).Value = "Datum"
+    $sheet.Cells.Item(1, 2).Value = "Vorgang"
+    $sheet.Cells.Item(1, 3).Value = "Name"
+    $sheet.Cells.Item(1, 4).Value = "Einnahme"
+    $sheet.Cells.Item(1, 5).Value = "Ausgabe"
+    $sheet.Cells.Item(1, 6).Value = "Kassenbestand"
 }
 
-# Nächste freie Zeile finden
-$nextRow = $Sheet.UsedRange.Rows.Count + 1
+$sheet = $workbook.Sheets.Item(1)
+$lastRow = $sheet.UsedRange.Rows.Count + 1
 
-# Werte in die neue Zeile einfügen
-$Sheet.Cells.Item($nextRow, 1) = 'Balance after calculations'
-$Sheet.Cells.Item($nextRow, 2) = $yearBalance
-$Sheet.Cells.Item($nextRow, 3) = $monthBalance
-$Sheet.Cells.Item($nextRow, 4) = $dayBalance
-$Sheet.Cells.Item($nextRow, 5) = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss") # Aktuelles Datum und Uhrzeit hinzufügen
+# Neue Zeile hinzufügen
+$sheet.Cells.Item($lastRow, 1).Value = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+$sheet.Cells.Item($lastRow, 2).Value = $operation
+$sheet.Cells.Item($lastRow, 3).Value = $name
+$sheet.Cells.Item($lastRow, 4).Value = $income
+$sheet.Cells.Item($lastRow, 5).Value = $expenditure
+$sheet.Cells.Item($lastRow, 6).Value = $cashbalance
 
-# Spalten automatisch anpassen
-$Sheet.Columns.AutoFit()
+# Spaltenbreite automatisch anpassen
+for ($col = 1; $col -le 6; $col++) {
+    $sheet.Columns.Item($col).AutoFit()
+}
 
-# Excel-Datei speichern
-$Workbook.SaveAs($Workbookpath)
-$Workbook.Close()
-$Excel.Quit()
+# Arbeitsmappe speichern und schließen
+$workbook.SaveAs($Workbookpath)
+$workbook.Close()
+$excel.Quit()

@@ -12,6 +12,7 @@ if "%~1"=="-h" (
 
 :: Abhängigkeiten
 call :abhängigkeiten
+:: title Kassenbuch [V%version%].bat >> %logfile_outpud% 2>> %logfile_error%
 title Kassenbuch [V%version%].bat
 
 :: setup
@@ -38,9 +39,9 @@ echo (3) Einstellungen.
 echo (4) Programm Schliessen.
 echo.
 set /p cho="> "
-if /i "%cho%"=="1" goto new_entry
-if /i "%cho%"=="2" goto old_entry
-if /i "%cho%"=="3" goto settings
+if /i "%cho%"=="1" goto :new_entry
+if /i "%cho%"=="2" goto :old_entry
+if /i "%cho%"=="3" goto :settings
 if /i "%cho%"=="4" (
     REM Platz für Log-Eintrag
     exit
@@ -48,6 +49,80 @@ if /i "%cho%"=="4" (
 echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
 timeout /t 3
 goto :main_menu
+
+:: Neuen Eintrag vornehmen
+:new_entry
+cls
+echo Neuer Eintrag:
+echo ---
+set /p operation="Vorgang: "
+set /p name="Name: "
+set /p income="Einnahme: "
+set /p expenditure="Ausgabe: "
+echo.
+:new_entry_question
+cls
+echo Neuer Eintrag:
+echo ---
+echo Ist dies so korrekt? (y/n)
+echo Vorgang: %operation%
+echo Name: %name%
+echo Einnahme: %income%
+echo Ausgabe: %expenditure%
+echo.
+
+:: Benutzer nach der Bestätigung fragen
+set /p cho="Bitte geben Sie 'y' für ja oder 'n' für nein ein: "
+
+if /i "%cho%"=="n" goto :main_menu
+if /i "%cho%"=="y" goto :make_entry
+
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :new_entry_question
+
+:: Funktion zur Behandlung des neuen Eintrags
+:make_entry
+call :get_date
+:: Erstellen der Umgebung und Auslese der aktuellen Kassenbestände
+if not exist "%Storage%\CB\Daten\%year%" (
+        md "%Storage%\CB\Daten\%year%"
+        if exist "%Storage%\CB\Daten\%year%\%CashBalanceFile%" (
+            set /p CashBalance_year=<"%Storage%\CB\Daten\%year%\%CashBalanceFile%"
+        ) else (
+            set "CashBalance_year=0"
+        )
+    )
+if not exist "%Storage%\CB\Daten\%year%\%month%" (
+    md "%Storage%\CB\Daten\%year%\%month%"
+    if exist "%Storage%\CB\Daten\%year%\%month%\%CashBalanceFile%" (
+        set /p CashBalance_month=<"%Storage%\CB\Daten\%year%\%month%\%CashBalanceFile%"
+    ) else (
+        set "CashBalance_month=0"
+    )
+)
+if not exist "%Storage%\CB\Daten\%year%\%month%\%day%" (
+    md "%Storage%\CB\Daten\%year%\%month%\%day%"
+    if exist "%Storage%\CB\Daten\%year%\%month%\%day%\%CashBalanceFile%" (
+        set /p CashBalance_day=<"%Storage%\CB\Daten\%year%\%month%\%day%\%CashBalanceFile%"
+    ) else (
+        set "CashBalance_day=0"
+    )
+)
+:: Aktualisieren der Kassenbestände
+for /f %%i in ('powershell -command "%CashBalance_year% + %income% - %expenditure%"') do set CashBalance_year=%%i
+echo %CashBalance_year%>"%Storage%\CB\Daten\%year%\%CashBalanceFile%"
+for /f %%i in ('powershell -command "%CashBalance_month% + %income% - %expenditure%"') do set CashBalance_month=%%i
+echo %CashBalance_month%>"%Storage%\CB\Daten\%year%\%month%\%CashBalanceFile%"
+for /f %%i in ('powershell -command "%CashBalance_day% + %income% - %expenditure%"') do set CashBalance_day=%%i
+echo %CashBalance_day%>"%Storage%\CB\Daten\%year%\%month%\%day%\%CashBalanceFile%"
+:: Formatieren der Kassenbücher
+set "cashbalance=%CashBalance_year%"
+powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExcel.ps1" "%operation%" "%name%" %income% %expenditure% "%Storage%\CB\Daten\%year%\Kassenbuch.xlsx" "%cashbalance%"
+set "cashbalance=%CashBalance_month%"
+powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExcel.ps1" "%operation%" "%name%" %income% %expenditure% "%Storage%\CB\Daten\%year%\%month%\Kassenbuch.xlsx" "%cashbalance%"
+set "cashbalance=%CashBalance_day%"
+powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExcel.ps1" "%operation%" "%name%" %income% %expenditure% "%Storage%\CB\Daten\%year%\%month%\%day%\Kassenbuch.xlsx" "%cashbalance%"
 
 :: Funktion für Abhängigkeiten
 :abhängigkeiten
@@ -68,6 +143,15 @@ goto :main_menu
     set "color_warning_highlight=[43;37m"
     set "color_error_highlight=[41;37m"
     set "color_status_highlight=[46;37m"
+
+    :: Variablen für :make_entry
+    set "CashBalanceFile=Kassenbestand(NICHT_LOESCHEN).txt"
+    set "CreateExcelFile=%Storage%\CB\System\Tools\CreateExcel.ps1"
+
+    :: Variablen für die logs
+    "logfile_outpud=%Storage%\CB\System\Files\Temp\Logs\output.log"
+    "logfile_error=%Storage%\CB\System\Files\Temp\Logs\errors.log"
+
     goto :eof
     :: oder exit /b
 
@@ -176,17 +260,18 @@ goto :main_menu
         )
     )
     echo %color_status%[STATUS] Schreibe die Datei 'colors.bat'.%color_reset%
-    set "color_reset=[0m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_info=[32m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_warning=[33m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_error=[31m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_status=[36m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_info_highlight=[42;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_warning_highlight=[43;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_error_highlight=[41;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
-    set "color_status_highlight=[46;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_reset=[0m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_info=[32m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_warning=[33m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_error=[31m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_status=[36m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_info_highlight=[42;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_warning_highlight=[43;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_error_highlight=[41;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
+    echo set "color_status_highlight=[46;37m">>"%Storage%\CB\System\Tools\Temp\colors.bat"
     echo %color_info%[INFO] Die Datei '%Storage%\CB\System\Tools\Temp\colors.bat' wurde erfolgreich geschrieben.%color_reset%
     echo %color_info%[INFO] Alle Schritte erfolgreich abgeschlossen!%color_reset%
+    call :abhängigkeiten
     goto :eof
 
 :: Funktion zum Verarbeiten des Updaters
@@ -211,8 +296,10 @@ goto :main_menu
 : Update Behandlung
 :handle_update
 cd /d "%Storage%\CB\System\Tools\" && start CB_Update.bat
-:: call :handle_error "Programm starten"
-timeout /t 3 /nobreak
+:: call :handle_error "Programm starten" >> %logfile_outpud% 2>> %logfile_error%
+call :handle_error "Programm starten"
+
+timeout /t 2 /nobreak
 :A
 if exist "%TEMP%\CB\shutdown.flag" (
     if exist "%TEMP%\CB\shutdown2.flag" (
@@ -229,6 +316,17 @@ if exist "%TEMP%\CB\shutdown.flag" (
     exit
 )
 
+:: Auslesen des Datums
+:get_date
+    set "Datum=%DATE%"
+    set "day=!Datum:~0,2!"
+    set "month=!Datum:~3,2!"
+    set "year=!Datum:~-4!"
+    goto :eof
+
+:math
+    goto :eof
+
 :: Allgemeine Fehlerbehandlungsfunktion
 :handle_error
     set "process_name=%~1"  :: Parameter 1: Prozessname oder Beschreibung
@@ -236,54 +334,30 @@ if exist "%TEMP%\CB\shutdown.flag" (
 
     :: Überprüfung des Errorlevels
     if !error_code! neq 0 (
-        echo %color_error%[ERROR] Fehler beim Prozess "!process_name!". Fehlercode: !error_code!%color_reset%
+        echo "%color_error%[ERROR] Fehler beim Prozess "!process_name!". Fehlercode: !error_code!%color_reset%"
         
         :: Erweiterte Fehlermeldungen basierend auf dem Errorlevel
         if !error_code! == 1 (
-            echo %color_error%[ERROR] Allgemeiner Fehler (Falscher Befehl oder ungültige Operation).%color_reset%
+            echo "%color_error%[ERROR] Allgemeiner Fehler (Falscher Befehl oder ungültige Operation).%color_reset%"
+            timeout /t 3 > nul
         ) else if !error_code! == 2 (
-            echo %color_error%[ERROR] Datei oder Verzeichnis nicht gefunden. Überprüfen Sie den Pfad: "!process_name!".%color_reset%
+            echo "%color_error%[ERROR] Datei oder Verzeichnis nicht gefunden. Überprüfen Sie den Pfad: "!process_name!".%color_reset%"
+            timeout /t 3 > nul
         ) else if !error_code! == 3 (
-            echo %color_error%[ERROR] Pfad wurde nicht gefunden. Möglicherweise ist der angegebene Pfad ungültig: "!process_name!".%color_reset%
+            echo "%color_error%[ERROR] Pfad wurde nicht gefunden. Möglicherweise ist der angegebene Pfad ungültig: "!process_name!".%color_reset%"
+            timeout /t 3 > nul
         ) else if !error_code! == 5 (
-            echo %color_error%[ERROR] Zugriff verweigert. Überprüfen Sie die Berechtigungen für: "!process_name!".%color_reset%
+            echo "%color_error%[ERROR] Zugriff verweigert. Überprüfen Sie die Berechtigungen für: "!process_name!".%color_reset%"
+            timeout /t 3 > nul
         ) else if !error_code! == 87 (
-            echo %color_error%[ERROR] Ungültiger Parameter. Überprüfen Sie die Syntax des Befehls: "!process_name!".%color_reset%
+            echo "%color_error%[ERROR] Ungültiger Parameter. Überprüfen Sie die Syntax des Befehls: "!process_name!".%color_reset%"
+            timeout /t 3 > nul
         ) else (
-            echo %color_error%[ERROR] Unbekannter Fehler aufgetreten. Fehlercode: !error_code! für: "!process_name!".%color_reset%
+            echo "%color_error%[ERROR] Unbekannter Fehler aufgetreten. Fehlercode: !error_code! für: "!process_name!".%color_reset%"
+            timeout /t 3 > nul
         )
     ) else (
-        echo %color_info%[INFO] Der Prozess "!process_name!" wurde erfolgreich abgeschlossen.%color_reset%
+        echo %color_status%[STATUS] Der Prozess "!process_name!" wurde erfolgreich abgeschlossen.%color_reset%
+        timeout /t 3 > nul
     )
-    exit /b !error_code!
-
-:: Erstellen von Logfiles 
-:log_function
-    set "logfile=%Storage%\CB\System\Files\Temp\Logs\output.log"
-    
-    :: Parameter 1: Funktionsname oder Befehl, Parameter 2: Optional, ob nur Fehler protokolliert werden sollen (1 = nur Fehler, 0 = alle Ausgaben)
-    set "function_name=%~1"
-    set "only_errors=%~2"
-
-    (
-        echo -------------------------------------------------------
-        echo [%date% %time%] Start der Funktion: !function_name!
-        echo -------------------------------------------------------
-
-        :: Dynamische Ausführung des Befehls oder der Funktion
-        if "!only_errors!" == "1" (
-            cmd /c "call !function_name! >>"%logfile%" 2>&1"
-            if errorlevel 1 (
-                echo [%date% %time%] Fehler bei der Funktion: !function_name! >> "%logfile%"
-            )
-        ) else (
-            cmd /c "call !function_name! >>"%logfile%" 2>&1"
-        )
-
-        echo -------------------------------------------------------
-        echo [%date% %time%] Ende der Funktion: !function_name!
-        echo -------------------------------------------------------
-    ) >> "%logfile%" 2>&1
-
-    endlocal
-    exit /b 0
+    exit /b "!error_code!"
