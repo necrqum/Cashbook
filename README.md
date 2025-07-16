@@ -64,7 +64,8 @@ Comming soon...
 <details>
     <summary>Via <a href="https://git-scm.com/">Git</a></summary>
 
-    git [Download](https://git-scm.com/downloads)
+> git [Download](https://git-scm.com/downloads)
+
 1. Clone the repository: 
     ```bash
     git clone https://github.com/necrqum/Cashbook.git
@@ -87,7 +88,8 @@ Comming soon...
 <details>
     <summary>Via <a href="https://curl.se/">Curl</a></summary>
 
-    - comes pre-installed on Windows
+> comes pre-installed on Windows
+
 1. Download the repository:
     ```bash
     curl -L -O https://github.com/necrqum/Cashbook/archive/main.zip
