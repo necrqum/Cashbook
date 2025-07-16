@@ -123,6 +123,17 @@ set "cashbalance=%CashBalance_month%"
 powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExcel.ps1" "%operation%" "%name%" %income% %expenditure% "%Storage%\CB\Daten\%year%\%month%\Kassenbuch.xlsx" "%cashbalance%"
 set "cashbalance=%CashBalance_day%"
 powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExcel.ps1" "%operation%" "%name%" %income% %expenditure% "%Storage%\CB\Daten\%year%\%month%\%day%\Kassenbuch.xlsx" "%cashbalance%"
+goto main_menu
+
+:old_entry
+echo old_entry
+pause
+goto main_menu
+
+:settings
+echo settings
+pause
+goto main_menu
 
 :: Funktion für Abhängigkeiten
 :abhängigkeiten
