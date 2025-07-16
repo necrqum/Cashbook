@@ -17,7 +17,7 @@ set "color_status=[36m"
         echo %color_error%[ERROR] Die Datei "%file%" wurde nicht gefunden!%color_reset%
         mkdir "%TEMP%\KB"
         echo %color_status%[STATUS] Lade requirements.txt herunter.%color_reset%
-        curl -o "%TEMP%\KB\requirements.txt" https://raw.githubusercontent.com/necrqum/Cashbook/main/requirements.txt
+        curl -o "%TEMP%\KB\requirements.txt" https://raw.githubusercontent.com/necrqum/cashbook/main/requirements.txt
         if errorlevel 1 (
             echo %color_error%[ERROR] Fehler beim Herunterladen der requirements.txt.%color_reset%
             exit /b 1
