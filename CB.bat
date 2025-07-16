@@ -140,7 +140,8 @@ goto main_menu
     if exist "settings.txt" (
         set /p Storage=<settings.txt
     ) else (
-        set "Storage=%userprofile%\Desktop"
+        :: set "Storage=%userprofile%\Desktop"
+        set "Storage=%appdata%"
     )
     set /p version=<"%Storage%\CB\System\Files\Temp\version.txt"
 
