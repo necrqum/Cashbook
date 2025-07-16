@@ -29,9 +29,9 @@
 - [ ] add advanced error-handling
 
 ## Overview:
-CB [Cashbook] is a tool *100%* written in [batch](https://en.wikipedia.org/wiki/Batch_file).
+CB [Cashbook] is a tool written in [Batch](https://en.wikipedia.org/wiki/Batch_file) and [Powershell](https://en.wikipedia.org/wiki/PowerShell).
 
-> This application provides a simple way to track all cash transactions of a business or individual. > It serves as both a journal and a ledger, capturing all cash inflows and outflows, including cash > receipts (money coming in) and cash payments (money going out). Therefore it saves
+> This application provides a simple way to track all cash transactions of a business or individual. It serves as both a journal and a ledger, capturing all cash inflows and outflows, including cash receipts (money coming in) and cash payments (money going out). Therefore it saves time
 
 ## Contents:
 1. [Resources](#resources)
@@ -64,7 +64,7 @@ Comming soon...
 <details>
     <summary>Via <a href="https://git-scm.com/">Git</a></summary>
 
-    - git [Download](https://git-scm.com/downloads)
+    git [Download](https://git-scm.com/downloads)
 1. Clone the repository: 
     ```bash
     git clone https://github.com/necrqum/Cashbook.git
@@ -96,8 +96,8 @@ Comming soon...
     - using the Windows default extractor (Win 11)
     - using an external program:
         Recommendation:
-    - [7-Zip](https://www.7-zip.org/)
-    - [WinRAR](https://www.win-rar.com/start.html?&L=1)
+        - [7-Zip](https://www.7-zip.org/)
+        - [WinRAR](https://www.win-rar.com/start.html?&L=1)
 
 3. Install the [dependencies](https://github.com/necrqum/Cashbook/tree/main/requirements.txt): 
     ```bash

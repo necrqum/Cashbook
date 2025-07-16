@@ -24,7 +24,7 @@ if "%info%" == "1" (
     echo Welcome %username%!
     echo.
     echo Please consider to read our guidelines.
-    start https://github.com/necrqum/Cashbook/blob/main/README.md
+    start https://github.com/necrqum/cashbook/blob/main/README.md
     timeout /t 15
 )
 
@@ -168,7 +168,7 @@ powershell -ExecutionPolicy Bypass -File "%Storage%\CB\System\Tools\CB_CreateExc
         echo %Storage%>>"%TEMP%\CB\path.txt"
         echo %color_info%[INFO] Der Bau der Umgebung '%TEMP%\CB' wurde erfolgreich abgeschlossen.%color_reset%
         echo %color_status%[STATUS] Lade requirements.txt herunter.%color_reset%
-        curl -o "%TEMP%\CB\requirements.txt" https://raw.githubusercontent.com/necrqum/Cashbook/main/requirements.txt
+        curl -o "%TEMP%\CB\requirements.txt" https://raw.githubusercontent.com/necrqum/cashbook/main/requirements.txt
         if errorlevel 1 (
             echo %color_error%[ERROR] Fehler beim Herunterladen der requirements.txt.%color_reset%
             exit /b 1
