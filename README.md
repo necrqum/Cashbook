@@ -21,8 +21,9 @@
 
 ## Todos
 - [x] fix the updater
+- [x] implement entry-functions
+- [ ] improve make_entry function
 - [ ] implement tool-updates
-- [ ] implement entry-functions
 - [ ] implement settings
 - [ ] add logs
 - [ ] add advanced error-handling
