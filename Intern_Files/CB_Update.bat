@@ -91,7 +91,7 @@ if "%version%"=="%t_version%" (
 echo %color_info%[INFO] A new update is available [%color_info_highlight%V%t_version%%color_reset%%color_info%]!%color_reset%
 echo.
 echo Wollen Sie die neue Version herunterladen? 
-echo "(ja/nein) oder (1/2)"
+echo ^(ja/nein^) oder ^(1/2^)
 set /p cho="> "
 
 if /i "%cho%"=="j" goto :update

@@ -222,7 +222,7 @@ if /i "%cho%"=="2" (
     cls
     echo Storage-Settings-Deletion-Whole
     echo.
-    echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? (y/n)%color_reset%
+    echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? ^(y/n^)%color_reset%
     echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
     echo.
     set /p confirm="> "
@@ -298,6 +298,7 @@ echo (2) Alle aufgeführten Speicher.
 echo (3) Zu den Speicher-Einstellungen zurückkehren.
 echo.
 set /p cho="> "
+
 if /i "%cho%"=="1" (
     cls
     echo Storage-Settings-Mainstorage
@@ -308,7 +309,7 @@ if /i "%cho%"=="1" (
     cls
     echo Storage-Settings-Mainstorage
     echo.
-    echo %color_warning%[WARNING] Soll der Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] wirklich in das Verzeichnis ["%color_warning_highlight%%n_storage%%color_reset%%color_warning%"] verschoben werden? (y/n)%color_reset%
+    echo %color_warning%[WARNING] Soll der Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] wirklich in das Verzeichnis ["%color_warning_highlight%%n_storage%%color_reset%%color_warning%"] verschoben werden? ^(y/n^)%color_reset%
     echo.
     set /p confirm="> "
     if /i "%confirm%"=="y" (
