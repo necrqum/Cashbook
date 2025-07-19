@@ -225,19 +225,22 @@ if /i "%cho%"=="2" (
     echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? (y/n)%color_reset%
     echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
     echo.
-    set /p cho="> "
-    if /i "%cho%"=="y" (
+    set /p confirm="> "
+    if /i "%confirm%"=="y" (
         cls
         call :handle_deletion "2"
         goto :del_program
     )
-    if /i "%cho%"=="n" (
+    if /i "%confirm%"=="n" (
         echo %color_info%[INFO] Das Löschen wurde abgebrochen.%color_reset%
         echo %color_status%[STATUS] Kehre zu den Speicherlöschungseinstellungen zurück...%color_reset%
         echo.
         timeout /t 3
         goto :del_program
     )
+    echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+    timeout /t 3
+    goto :del_program
 )
 if /i "%cho%"=="3" goto :storage_settings
 echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
@@ -301,26 +304,29 @@ if /i "%cho%"=="1" (
     echo.
     echo Bitte gib das Verzeichnis an, in welches der Hauptspeicher verschoben werden soll:
     echo.
-    set /p n_temp=
+    set /p n_storage=
     cls
     echo Storage-Settings-Mainstorage
     echo.
     echo %color_warning%[WARNING] Soll der Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] wirklich in das Verzeichnis ["%color_warning_highlight%%n_storage%%color_reset%%color_warning%"] verschoben werden? (y/n)%color_reset%
     echo.
-    set /p cho="> "
-    if /i "%cho%"=="y" (
+    set /p confirm="> "
+    if /i "%confirm%"=="y" (
         cls
         call :handle_storage
         call :handle_error "Verschieben des Hauptspeichers"
         goto :program_storage
     )
-    if /i "%cho%"=="n" (
+    if /i "%confirm%"=="n" (
         echo %color_info%[INFO] Das Verschieben wurde abgebrochen.%color_reset%
         echo %color_status%[STATUS] Kehre zu den Speicherverschiebungseinstellungen zurück...%color_reset%
         echo.
         timeout /t 3
         goto :program_storage
     )
+    echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+    timeout /t 3
+    goto :program_storage
 )
 if /i "%cho%"=="2" (
     cls && echo soon && pause && goto :program_storage
