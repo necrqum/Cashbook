@@ -171,7 +171,7 @@ REM Löschen von CB.bat etc. über externes Tool (z.B. Installer?)
 
 REM CB_Observe.bat: Logs, Errorhandling, etc.
 
-:storage_setting
+:storage_settings
 cls
 echo Storage-Settings
 echo.
@@ -325,7 +325,7 @@ if /i "%cho%"=="1" (
 if /i "%cho%"=="2" (
     cls && echo soon && pause && goto :program_storage
 )
-if /i "%cho%"=="3" goto :storage_setting
+if /i "%cho%"=="3" goto :storage_settings
 echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
 timeout /t 3
 goto :program_storage
