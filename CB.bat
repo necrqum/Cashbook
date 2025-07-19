@@ -143,7 +143,7 @@ echo (6) Zum Hauptmenü zurückkehren.
 echo.
 set /p cho="> "
 if /i "%cho%"=="1" goto :storage_settings
-if /i "%cho%"=="2" goto :update_settings REM z.B. Manuell updaten, update-counter einstellen
+if /i "%cho%"=="2" goto :update_settings REM z.B. Manuell updaten, update-counter einstellen, soll auch auf testversionen aktualisiert werden oder nur vollendete Versionen
 if /i "%cho%"=="3" goto :safety_settings REM z.B. Verschlüsselung, Passwörter/Login
 if /i "%cho%"=="4" goto :startup_settings REM z.B. autostart, verknüpfungen, reperatur-tool
 if /i "%cho%"=="5" goto :function_settings
