@@ -24,9 +24,14 @@
 - [x] implement entry-functions
 - [ ] improve make_entry function
 - [ ] implement tool-updates
-- [ ] implement settings
+- [ / ] implement settings
 - [ ] add logs
-- [ ] add advanced error-handling
+- [ / ] add advanced error-handling
+- [ ] add update_settings
+- [ ] add safety_settings
+- [ ] add startup_settings
+- [ ]
+- [ ]
 
 ## Overview:
 CB [Cashbook] is a tool written in [Batch](https://en.wikipedia.org/wiki/Batch_file) and [Powershell](https://en.wikipedia.org/wiki/PowerShell).

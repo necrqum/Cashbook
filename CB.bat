@@ -131,21 +131,336 @@ pause
 goto main_menu
 
 :settings
-echo settings
-pause
-goto main_menu
+cls
+echo Settings
+echo.
+echo (1) Speicher-Einstellungen.
+echo (2) Update-Einstellungen.
+echo (3) Sicherheits-Einstellungen.
+echo (4) Startup-Einstellungen.
+echo (5) Funktions-Einstellungen
+echo (6) Zum Hauptmenü zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" goto :storage_settings
+if /i "%cho%"=="2" goto :update_settings REM z.B. Manuell updaten, update-counter einstellen
+if /i "%cho%"=="3" goto :safety_settings REM z.B. Verschlüsselung, Passwörter/Login
+if /i "%cho%"=="4" goto :startup_settings REM z.B. autostart, verknüpfungen, reperatur-tool
+if /i "%cho%"=="5" goto :function_settings
+if /i "%cho%"=="6" goto :main_menu
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :setting
+
+REM Verbesserung des Updaters, er soll neben dem Hauptprogramm auch alle tools aktualisieren können
+REM Dafür muss auch die version.txt erstellung und auslese angepasst werden
+
+REM Das Reperaturtool als Teil des Installers.bat, soll anders als der Updater standartmäßig jedesmal ausgeführt werden und alles überprüfen
+REM z.B. soll es einige Aufgaben von Funktionen aus CB.bat, wie ':abhängigkeiten', ':process_requirements' abnehmen
+REM Dabei meine ich zum Einen z.B. die Überprüfung aller Pfade, also auch die Abstimmung mit vorhandenen Dateien aus ':abhängigkeiten'
+REM Zum Anderen meine ich dabei z.B. das Herunterladen fehlender Tools/Dateien und die Überwachung der Ordnerstruktur aus ':process_requirements'
+
+REM Der Installer.bat könnte dann z.B. auch CB.bat herunterladen, in dem CB -Verzeichnis einsortieren und Verknüpfungen zum Programm anlegen
+REM Dabei soll eine interaktive Installation ermöglicht werden, bei welcher direkt pfade und einstellungen angegeben werden können
+REM Dann muss er sich irgendwie selber in die ordnerstruktur einfügen, also dahin verschieben
+
+REM Funktions-Settings: Sicherheitskopieautomatik, Sortierfunktion, Einstellung zur Art des speicherns. Z.B. Auswahl zwischen .txt, .xlsx, ...
+REM und weitere Tool-Einstellungen, wie z.B. 
+
+REM Löschen von CB.bat etc. über externes Tool (z.B. Installer?)
+
+REM CB_Observe.bat: Logs, Errorhandling, etc.
+
+:storage_setting
+cls
+echo Storage-Settings
+echo.
+echo (1) Programmspeicher verschieben.
+echo (2) Programm löschen.
+echo (3) Zu den Einstellungen zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" goto :program_storage
+if /i "%cho%"=="2" goto :del_program REM z.B. nur Hauptspeicher oder alles
+if /i "%cho%"=="3" goto :settings
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :storage_settings
+
+:del_program
+cls
+echo Storage-Settings-Deletion
+echo.
+echo Welche(r) Speicher soll gelöscht werden?
+echo (1) Hauptspeicher.
+echo (2) Hauptspeicher + Systemspeicher.
+echo (3) Zu den Speichereinstellungen zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" (
+    cls
+    echo Storage-Settings-Deletion-Mainstorage
+    echo.
+    echo %color_warning%[WARNING] Bist du dir sicher, dass der gesamte Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] gelöscht werden soll? (y/n)%color_reset%
+    echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
+    echo.
+    set /p cho="> "
+    if /i "%cho%"=="y" (
+        cls
+        call :handle_deletion "1"
+        goto :del_program
+    )
+    if /i "%cho%"=="n" (
+        echo %color_info%[INFO] Das Löschen wurde abgebrochen.%color_reset%
+        echo %color_status%[STATUS] Kehre zu den Speicherlöschungseinstellungen zurück...%color_reset%
+        echo.
+        timeout /t 3
+        goto :del_program
+    )
+)
+if /i "%cho%"=="2" (
+    cls
+    echo Storage-Settings-Deletion-Whole
+    echo.
+    echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? (y/n)%color_reset%
+    echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
+    echo.
+    set /p cho="> "
+    if /i "%cho%"=="y" (
+        cls
+        call :handle_deletion "2"
+        goto :del_program
+    )
+    if /i "%cho%"=="n" (
+        echo %color_info%[INFO] Das Löschen wurde abgebrochen.%color_reset%
+        echo %color_status%[STATUS] Kehre zu den Speicherlöschungseinstellungen zurück...%color_reset%
+        echo.
+        timeout /t 3
+        goto :del_program
+    )
+)
+if /i "%cho%"=="3" goto :storage_settings
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :storage_settings
+
+:handle_deletion
+    REM 1: Nur Hauptspeicher; 2: Alles
+    set "mode=%~1"
+    if "%mode%"=="1" (
+        rmdir /S /Q "%Storage%"
+        call :handle_error "Löschen des Hauptspeichers"
+        goto :eof
+    )
+    if "%mode%"=="2" (
+        echo %color_info%[INFO] Vollständiger Löschprozess ist gestartet...%color_reset%
+        rmdir /S /Q "%Storage%"
+        call :handle_error "Löschen des Hauptspeichers"
+        rmdir /S /Q "%TEMP%\CB"
+        call :handle_error "Löschen des Systemspeichers"
+        :: temporäre deinstallationsdatei für CB.bat
+        set "CB_Remove=%~dp0CB_Remove.bat"
+        echo setlocal enabledelayedexpansion>>"%CB_Remove%"
+        echo set "color_reset=[0m">>"%CB_Remove%"
+        echo set "color_status=[36m">>"%CB_Remove%"
+        echo set "color_info=[32m">>"%CB_Remove%"
+        echo cls>>"%CB_Remove%"
+        echo %color_status%[STATUS] CB.bat wird deinstalliert...%color_reset%>>"%CB_Remove%"
+        echo timeout /t 6 /nobreak>>"%CB_Remove%"
+        echo del CB.bat>>"%CB_Remove%"
+        echo timeout /t 3>>"%CB_Remove%"
+        echo %color_info%[INFO] CB.bat wurde erfolgreich deinstalliert.%color_reset%>>"%CB_Remove%"
+        echo exit>>"%CB_Remove%"
+        call :handle_error "Schreiben von CB_Remove.bat"
+
+        echo %color_info%[INFO] Löschen von CB.bat beginnt...%color_reset%
+
+        cd /d "%~dp0" && start CB_Remove.bat
+        call :handle_error "Starten von CB_Remove.bat"
+        timeout /t 3
+        exit
+        goto :eof
+    )
+    echo %color_error%[ERROR] Ungültiger Parameter "%mode%". Erwartet 1 oder 2.
+    exit /b 1
+
+:program_storage
+cls
+echo Storage-Settings-Move
+echo.
+echo Welche(r) Speicher sollen verschoben werden?
+:: echo (1) Sicherheits-Speicher ["%temp%\CB"].
+echo (1) Hauptspeicher ["%Storage%\CB"].
+echo (2) Alle aufgeführten Speicher.
+echo (3) Zu den Speicher-Einstellungen zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" (
+    cls
+    echo Storage-Settings-Mainstorage
+    echo.
+    echo Bitte gib das Verzeichnis an, in welches der Hauptspeicher verschoben werden soll:
+    echo.
+    set /p n_temp=
+    cls
+    echo Storage-Settings-Mainstorage
+    echo.
+    echo %color_warning%[WARNING] Soll der Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] wirklich in das Verzeichnis ["%color_warning_highlight%%n_storage%%color_reset%%color_warning%"] verschoben werden? (y/n)%color_reset%
+    echo.
+    set /p cho="> "
+    if /i "%cho%"=="y" (
+        cls
+        call :handle_storage
+        call :handle_error "Verschieben des Hauptspeichers"
+        goto :program_storage
+    )
+    if /i "%cho%"=="n" (
+        echo %color_info%[INFO] Das Verschieben wurde abgebrochen.%color_reset%
+        echo %color_status%[STATUS] Kehre zu den Speicherverschiebungseinstellungen zurück...%color_reset%
+        echo.
+        timeout /t 3
+        goto :program_storage
+    )
+)
+if /i "%cho%"=="2" (
+    cls && echo soon && pause && goto :program_storage
+)
+if /i "%cho%"=="3" goto :storage_setting
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :program_storage
+
+:handle_storage
+    :: Variablen definieren
+    set "SRC=%TEMP%\CB\path.txt"
+    :: Überprüfe, ob die Datei existiert
+    if not exist "%SRC%" (
+        call :handle_error "%SRC%"
+        exit /b 1
+    )
+
+    :: Zweite Zeile der Datei einlesen
+    set "i=0"
+    for /f "usebackq delims=" %%A in ("%SRC%") do (
+        set /a i+=1
+        if !i! equ 2 (
+            set "Storage=%%A"
+            goto :read_done
+        )
+    )
+    :read_done
+
+    :: Aktualisieren der path.txt
+    set "i=0"
+    > "%TEMP%\CB\path.tmp" (
+        for /f "usebackq delims=" %%A in ("%SRC%") do (
+            set /a i+=1
+            if !i! equ 2 (
+                rem echo der neue Pfad
+                echo(!n_storage!
+            ) else (
+                rem echo alle anderen Zeilen unverändert
+                echo(%%A
+            )
+        )
+    )
+    rem Datei austauschen ohne Rückfrage
+    move /Y "%TEMP%\CB\path.tmp" "%SRC%" > nul
+    call :handle_error "Verschieben von "%TEMP%\CB\path.tmp" nach "%SRC%""
+
+    :: Hauptspeicher vom alten zum neuen Speicherort verschieben
+    robocopy "%Storage%\CB" "%n_storage%" /MOVE /E
+    call :handle_error "Verschieben von '%Storage%\CB' nach '%n_storage%'"
+    goto :eof
+
+:update_settings
+cls
+echo Storage-Settings
+echo.
+echo (1) Speicher-Einstellungen.
+echo (2) Update-Einstellungen.
+echo (3) Sicherheits-Einstellungen.
+echo (4) Startup-Einstellungen.
+echo (5) Zum Hauptmenü zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" goto :storage_settings
+if /i "%cho%"=="2" goto :update_settings
+if /i "%cho%"=="3" goto :safety_settings
+if /i "%cho%"=="4" goto :startup_settings
+if /i "%cho%"=="5" goto :main_menu
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :update_settings
+
+:safety_settings
+cls
+echo Storage-Settings
+echo.
+echo (1) Speicher-Einstellungen.
+echo (2) Update-Einstellungen.
+echo (3) Sicherheits-Einstellungen.
+echo (4) Startup-Einstellungen.
+echo (5) Zum Hauptmenü zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" goto :storage_settings
+if /i "%cho%"=="2" goto :update_settings
+if /i "%cho%"=="3" goto :safety_settings
+if /i "%cho%"=="4" goto :startup_settings
+if /i "%cho%"=="5" goto :main_menu
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :safety_settings
+
+:startup_settings
+cls
+echo Storage-Settings
+echo.
+echo (1) Speicher-Einstellungen.
+echo (2) Update-Einstellungen.
+echo (3) Sicherheits-Einstellungen.
+echo (4) Startup-Einstellungen.
+echo (5) Zum Hauptmenü zurückkehren.
+echo.
+set /p cho="> "
+if /i "%cho%"=="1" goto :storage_settings
+if /i "%cho%"=="2" goto :update_settings
+if /i "%cho%"=="3" goto :safety_settings
+if /i "%cho%"=="4" goto :startup_settings
+if /i "%cho%"=="5" goto :main_menu
+echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+timeout /t 3
+goto :startup_settings
 
 :: Funktion für Abhängigkeiten
 :abhängigkeiten
-    if exist "settings.txt" (
-        set /p Storage=<settings.txt
+    :: Überprüfe, ob die Datei existiert und Definition der Hauptvariablen
+    if exist "%TEMP%\CB\path.txt" (
+        set "i=0"
+        for /f "usebackq delims=" %%A in ("%TEMP%\CB\path.txt") do (
+            set /a i+=1
+            if !i! equ 2 (
+                set "Storage=%%A"
+                goto :break_loop
+            )
+        )
+        :break_loop
+        :: Abstimmung der Ortsvariable von CB.bat
+        set /p "cb_path=" < "%TEMP%\CB\path.txt"
+        if not "%cb_path%" equ "%~dp0" (
+            (
+                echo "%~dp0"
+                for /f "usebackq skip=1 delims=" %%A in ("%TEMP%\CB\path.txt") do echo %%A
+            ) > "%TEMP%\CB\path.txt"
+        )
     ) else (
         :: set "Storage=%userprofile%\Desktop"
         set "Storage=%appdata%"
     )
     set /p version=<"%Storage%\CB\System\Files\Temp\version.txt"
 
-    :: Farbcodes für Textausgabem
+    :: Farbcodes für Textausgaben
     set "color_reset=[0m"
     set "color_info=[32m"
     set "color_warning=[33m"
