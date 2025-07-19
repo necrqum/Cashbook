@@ -201,28 +201,31 @@ if /i "%cho%"=="1" (
     cls
     echo Storage-Settings-Deletion-Mainstorage
     echo.
-    echo %color_warning%[WARNING] Bist du dir sicher, dass der gesamte Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] gelöscht werden soll? (y/n)%color_reset%
+    echo %color_warning%[WARNING] Bist du dir sicher, dass der gesamte Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] gelöscht werden soll? ^(y/n^)%color_reset%
     echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
     echo.
-    set /p cho="> "
-    if /i "%cho%"=="y" (
+    set /p confirm="> "
+    if /i "%confirm%"=="y" (
         cls
         call :handle_deletion "1"
         goto :del_program
     )
-    if /i "%cho%"=="n" (
+    if /i "%confirm%"=="n" (
         echo %color_info%[INFO] Das Löschen wurde abgebrochen.%color_reset%
         echo %color_status%[STATUS] Kehre zu den Speicherlöschungseinstellungen zurück...%color_reset%
         echo.
         timeout /t 3
         goto :del_program
     )
+    echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
+    timeout /t 3
+    goto :del_program
 )
 if /i "%cho%"=="2" (
     cls
     echo Storage-Settings-Deletion-Whole
     echo.
-    echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? ^(y/n^)%color_reset%
+    echo %color_warning%[WARNING] Bist du dir sicher, dass das gesamte Programm ["%color_warning_highlight%CB.bat%color_reset%%color_warning%"] samt Hauptspeicher ["%color_warning_highlight%%Storage%\CB%color_reset%%color_warning%"] und Systemspeicher ["%color_warning_highlight%%TEMP%\CB%color_reset%%color_warning%"] gelöscht werden soll? ^(y/n^)%color_reset%
     echo %color_warning%[WARNING] Sofern keine Sicherheitskopien vorliegen, werden auch %color_warning_highlight%alle Kassenbucheinträge%color_reset%%color_warning% gelöscht werden!%color_reset%
     echo.
     set /p confirm="> "
@@ -251,13 +254,13 @@ goto :storage_settings
     REM 1: Nur Hauptspeicher; 2: Alles
     set "mode=%~1"
     if "%mode%"=="1" (
-        rmdir /S /Q "%Storage%"
+        rmdir /S /Q "%Storage%\CB"
         call :handle_error "Löschen des Hauptspeichers"
         goto :eof
     )
     if "%mode%"=="2" (
         echo %color_info%[INFO] Vollständiger Löschprozess ist gestartet...%color_reset%
-        rmdir /S /Q "%Storage%"
+        rmdir /S /Q "%Storage%\CB"
         call :handle_error "Löschen des Hauptspeichers"
         rmdir /S /Q "%TEMP%\CB"
         call :handle_error "Löschen des Systemspeichers"
@@ -305,7 +308,7 @@ if /i "%cho%"=="1" (
     echo.
     echo Bitte gib das Verzeichnis an, in welches der Hauptspeicher verschoben werden soll:
     echo.
-    set /p n_storage=
+    set /p "n_storage="
     cls
     echo Storage-Settings-Mainstorage
     echo.
@@ -376,69 +379,9 @@ goto :program_storage
     call :handle_error "Verschieben von "%TEMP%\CB\path.tmp" nach "%SRC%""
 
     :: Hauptspeicher vom alten zum neuen Speicherort verschieben
-    robocopy "%Storage%\CB" "%n_storage%" /MOVE /E
+    robocopy "%Storage%\CB" "%n_storage%\CB" /MOVE /E
     call :handle_error "Verschieben von '%Storage%\CB' nach '%n_storage%'"
     goto :eof
-
-:update_settings
-cls
-echo Storage-Settings
-echo.
-echo (1) Speicher-Einstellungen.
-echo (2) Update-Einstellungen.
-echo (3) Sicherheits-Einstellungen.
-echo (4) Startup-Einstellungen.
-echo (5) Zum Hauptmenü zurückkehren.
-echo.
-set /p cho="> "
-if /i "%cho%"=="1" goto :storage_settings
-if /i "%cho%"=="2" goto :update_settings
-if /i "%cho%"=="3" goto :safety_settings
-if /i "%cho%"=="4" goto :startup_settings
-if /i "%cho%"=="5" goto :main_menu
-echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
-timeout /t 3
-goto :update_settings
-
-:safety_settings
-cls
-echo Storage-Settings
-echo.
-echo (1) Speicher-Einstellungen.
-echo (2) Update-Einstellungen.
-echo (3) Sicherheits-Einstellungen.
-echo (4) Startup-Einstellungen.
-echo (5) Zum Hauptmenü zurückkehren.
-echo.
-set /p cho="> "
-if /i "%cho%"=="1" goto :storage_settings
-if /i "%cho%"=="2" goto :update_settings
-if /i "%cho%"=="3" goto :safety_settings
-if /i "%cho%"=="4" goto :startup_settings
-if /i "%cho%"=="5" goto :main_menu
-echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
-timeout /t 3
-goto :safety_settings
-
-:startup_settings
-cls
-echo Storage-Settings
-echo.
-echo (1) Speicher-Einstellungen.
-echo (2) Update-Einstellungen.
-echo (3) Sicherheits-Einstellungen.
-echo (4) Startup-Einstellungen.
-echo (5) Zum Hauptmenü zurückkehren.
-echo.
-set /p cho="> "
-if /i "%cho%"=="1" goto :storage_settings
-if /i "%cho%"=="2" goto :update_settings
-if /i "%cho%"=="3" goto :safety_settings
-if /i "%cho%"=="4" goto :startup_settings
-if /i "%cho%"=="5" goto :main_menu
-echo %color_error%[ERROR] Ungültige Eingabe.%color_reset%
-timeout /t 3
-goto :startup_settings
 
 :: Funktion für Abhängigkeiten
 :abhängigkeiten
